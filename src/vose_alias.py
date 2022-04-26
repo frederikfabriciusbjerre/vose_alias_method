@@ -1,6 +1,6 @@
 import numpy as np
 
-def vose_alias(p, size):
+def vose_alias(p, n):
     d = len(p)
     probability = np.zeros(d)
     alias = np.zeros(d, dtype = np.ulonglong) #maybe another integer type?
@@ -37,8 +37,10 @@ def vose_alias(p, size):
         probability[more] = 1.0
 
     # sample from alias table
-    columns = np.random.randint(0, (len(probability) - 1), size = size)
-    uniform_samples = np.random.random_sample(size)
+    columns = np.random.randint(0, d, size = n)
+    uniform_samples = np.random.random_sample(n)
     coin_tosses = uniform_samples < probability[columns]
-    idx = np.where(coin_tosses == True, np.array(columns, dtype = int), np.array((alias[columns]), dtype = int))
+    idx = np.where(coin_tosses == True, 
+                   np.array(columns, dtype = int), # choose column
+                   np.array(alias[columns], dtype = int)) # choose its alias
     return idx
